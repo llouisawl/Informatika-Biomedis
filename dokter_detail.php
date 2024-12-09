@@ -28,35 +28,29 @@ $gambarPath = 'images/' . $dokter['gambar']; // Path gambar dokter
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="id">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Rubik:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" />
     <link rel="stylesheet" href="dokter.css" />
     <title>Dr. <?php echo $dokter['nama']; ?></title>
-  </head>
-  <body>
+</head>
+<body>
     <!-- Header -->
     <header>
-      <div class="logo">
-        <img src="Images/LogoNumberOneHealth.png" alt="NumberOneHealth Logo" />
-        <a>Number<span>ONE</span>Health</a>
-      </div>
+        <div class="logo">
+            <img src="Images/LogoNumberOneHealth.png" alt="NumberOneHealth Logo" />
+            <a>Number<span>ONE</span>Health</a>
+        </div>
 
-      <nav class="navbar">
-        <a href="index.php#Home">Beranda</a>
-        <a href="index.php#Poli">Layanan Kami</a>
-        <a href="index.php#Dokter">Temukan Dokter</a>
-        <a href="index.php#Berita">Berita</a>
-      </nav>
+        <nav class="navbar">
+            <a href="index.php#Home">Beranda</a>
+            <a href="index.php#Poli">Layanan Kami</a>
+            <a href="index.php#Dokter">Temukan Dokter</a>
+            <a href="index.php#Berita">Berita</a>
+        </nav>
     </header>
 
     <!-- Section: Dokter Detail -->
@@ -78,23 +72,29 @@ $gambarPath = 'images/' . $dokter['gambar']; // Path gambar dokter
                     <thead>
                         <tr>
                             <th>Hari</th>
-                            <th>Jam</th>
+                            <th>Jam Mulai</th>
+                            <th>Jam Selesai</th>
                             <th>Lokasi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         // Menampilkan jadwal
-                        $jadwal = explode("\n", $dokter['jadwal']);
-                        foreach ($jadwal as $row) {
-                            $detail = explode("|", $row); // Pisahkan Hari | Jam | Lokasi
-                            if (count($detail) == 3) {
-                                echo "<tr>
-                                        <td>{$detail[0]}</td>
-                                        <td>{$detail[1]}</td>
-                                        <td>{$detail[2]}</td>
-                                      </tr>";
+                        if (!empty($dokter['jadwal'])) {
+                            $jadwal = explode("\n", $dokter['jadwal']); // Pisahkan berdasarkan baris
+                            foreach ($jadwal as $row) {
+                                $detail = explode("|", $row); // Pisahkan setiap kolom berdasarkan "|"
+                                if (count($detail) == 4) { // Pastikan ada 4 elemen: Hari, Jam Mulai, Jam Selesai, Lokasi
+                                    echo "<tr>
+                                            <td>{$detail[0]}</td>
+                                            <td>{$detail[1]}</td>
+                                            <td>{$detail[2]}</td>
+                                            <td>{$detail[3]}</td>
+                                          </tr>";
+                                }
                             }
+                        } else {
+                            echo "<tr><td colspan='4'>Jadwal belum tersedia.</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -114,5 +114,5 @@ $gambarPath = 'images/' . $dokter['gambar']; // Path gambar dokter
             </div>
         </div>
     </section>
-  </body>
+</body>
 </html>
