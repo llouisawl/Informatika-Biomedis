@@ -18,12 +18,13 @@ if (mysqli_num_rows($result) > 0) {
 }
 
 // Query untuk mengambil dokter yang memiliki spesialisasi sesuai dengan poli ini
-$query_dokter = "SELECT id, nama, spesialis, gambar, jadwal FROM dokterinfo WHERE spesialis = '{$row['nama_poli']}'";
+$query_dokter = "SELECT id, nama, spesialis, gambar, profil, jadwal, kontak_email, kontak_telepon 
+                 FROM dokterinfo WHERE spesialis = '{$row['nama_poli']}'";
 $result_dokter = mysqli_query($conn, $query_dokter);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -95,8 +96,8 @@ $result_dokter = mysqli_query($conn, $query_dokter);
                             echo "<ul>";
                             foreach ($jadwal as $row) {
                                 $detail = explode("|", $row); // Pisahkan Hari | Jam | Lokasi
-                                if (count($detail) == 3) {
-                                    echo "<li><strong>{$detail[0]}</strong>: {$detail[1]} di {$detail[2]}</li>";
+                                if (count($detail) == 4) {
+                                    echo "<li><strong>{$detail[0]}</strong>: {$detail[1]} - {$detail[2]} di {$detail[3]}</li>";
                                 }
                             }
                             echo "</ul>"; // Menutup daftar jadwal
