@@ -15,12 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gambarPath = 'images/' . $gambar;
     move_uploaded_file($gambarTmp, $gambarPath);
 
-    // Menyimpan jadwal dalam format "Hari|Jam|Lokasi"
+    // Menyimpan jadwal dalam format "Hari|Jam Mulai|Jam Selesai|Lokasi"
     $jadwal = [];
     foreach ($_POST['hari'] as $index => $hari) {
-        $jam = $_POST['jam'][$index];
+        $jam_mulai = $_POST['jam_mulai'][$index];
+        $jam_selesai = $_POST['jam_selesai'][$index];
         $lokasi = $_POST['lokasi'][$index];
-        $jadwal[] = "{$hari}|{$jam}|{$lokasi}";
+        $jadwal[] = "{$hari}|{$jam_mulai}|{$jam_selesai}|{$lokasi}";
     }
     $jadwal = implode("\n", $jadwal); // Menggabungkan jadwal dengan newline sebagai pemisah
 
@@ -137,6 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 14px;
             color: #888;
         }
+
+        .jadwal-container {
+            margin-top: 10px;
+        }
+
+        .jadwal-item {
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
@@ -147,17 +156,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="nama">Nama Dokter:</label>
             <input type="text" name="nama" id="nama" required><br>
 
-        <label for="spesialis">Spesialis:</label>
-        <select name="spesialis" required>
-            <option value="Mata">Mata</option>
-            <option value="Anak">Anak</option>
-            <option value="Kandungan">Kandungan</option>
-            <option value="Penyakit Dalam">Penyakit Dalam</option>
-            <option value="Gigi">Gigi</option>
-            <option value="Jantung">Jantung</option>
-            <option value="Kulit">Kulit</option>
-            <option value="THT">THT</option>
-        </select><br>
+            <label for="spesialis">Spesialis:</label>
+            <select name="spesialis" required>
+                <option value="Mata">Mata</option>
+                <option value="Anak">Anak</option>
+                <option value="Kandungan">Kandungan</option>
+                <option value="Penyakit Dalam">Penyakit Dalam</option>
+                <option value="Gigi">Gigi</option>
+                <option value="Jantung">Jantung</option>
+                <option value="Kulit">Kulit</option>
+                <option value="THT">THT</option>
+            </select><br>
+
             <label for="gambar">Gambar Dokter:</label>
             <input type="file" name="gambar" id="gambar" required><br>
 
@@ -182,8 +192,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="Jumat">Jumat</option>
                     </select><br>
 
-                    <label for="jam">Jam:</label>
-                    <input type="time" name="jam[]" required><br>
+                    <label for="jam_mulai">Jam Mulai:</label>
+                    <input type="time" name="jam_mulai[]" required><br>
+
+                    <label for="jam_selesai">Jam Selesai:</label>
+                    <input type="time" name="jam_selesai[]" required><br>
 
                     <label for="lokasi">Lokasi:</label>
                     <input type="text" name="lokasi[]" required><br>
@@ -210,4 +223,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </body>
 </html>
-
