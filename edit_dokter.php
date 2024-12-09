@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kontak_telepon = $_POST['kontak_telepon'];
 
     // Proses upload gambar, jika ada gambar baru yang diupload
-    if ($_FILES['gambar']['name']) {
-        $gambar = $_FILES['gambar']['name'];
+    $gambar = $_FILES['gambar']['name'];
+    if ($gambar) {
         $gambarTmp = $_FILES['gambar']['tmp_name'];
         $gambarPath = 'images/' . $gambar;
         move_uploaded_file($gambarTmp, $gambarPath);
@@ -40,12 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $gambar = $dokter['gambar'];
     }
 
-    // Menyimpan jadwal dalam format "Hari|Jam|Lokasi"
+    // Menyimpan jadwal dalam format "Hari|Jam Mulai|Jam Selesai|Lokasi"
     $jadwal = [];
     foreach ($_POST['hari'] as $index => $hari) {
-        $jam = $_POST['jam'][$index];
+        $jam_mulai = $_POST['jam_mulai'][$index];
+        $jam_selesai = $_POST['jam_selesai'][$index];
         $lokasi = $_POST['lokasi'][$index];
-        $jadwal[] = "{$hari}|{$jam}|{$lokasi}";
+        $jadwal[] = "{$hari}|{$jam_mulai}|{$jam_selesai}|{$lokasi}";
     }
     $jadwal = implode("\n", $jadwal); // Menggabungkan jadwal dengan newline sebagai pemisah
 
@@ -110,7 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         input[type="text"],
         input[type="file"],
         input[type="email"],
-        input[type="time"] {
+        input[type="time"],
+        textarea {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -121,7 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         input[type="text"]:focus,
         input[type="file"]:focus,
         input[type="email"]:focus,
-        input[type="time"]:focus {
+        input[type="time"]:focus,
+        textarea:focus {
             border-color: #007BFF;
             outline: none;
         }
@@ -171,11 +174,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .jadwal-container {
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         .jadwal-item {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -217,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php
                 $jadwalArray = explode("\n", $dokter['jadwal']);
                 foreach ($jadwalArray as $index => $item) {
-                    list($hari, $jam, $lokasi) = explode('|', $item);
+                    list($hari, $jam_mulai, $jam_selesai, $lokasi) = explode('|', $item);
                 ?>
                     <div class="jadwal-item">
                         <label for="hari">Hari:</label>
@@ -229,8 +232,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option value="Jumat" <?php if ($hari == 'Jumat') echo 'selected'; ?>>Jumat</option>
                         </select><br>
 
-                        <label for="jam">Jam:</label>
-                        <input type="time" name="jam[]" value="<?php echo $jam; ?>" required><br>
+                        <label for="jam_mulai">Jam Mulai:</label>
+                        <input type="time" name="jam_mulai[]" value="<?php echo $jam_mulai; ?>" required><br>
+
+                        <label for="jam_selesai">Jam Selesai:</label>
+                        <input type="time" name="jam_selesai[]" value="<?php echo $jam_selesai; ?>" required><br>
 
                         <label for="lokasi">Lokasi:</label>
                         <input type="text" name="lokasi[]" value="<?php echo $lokasi; ?>" required><br>
